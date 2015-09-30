@@ -51,7 +51,7 @@ PyObject* landmarks_to_PyArray( // Convert landmarks array to numpy array
  * Returns:	char* pointing to the array data;
  * 			NULL if array is invalid
  */
-char* PyArray_to_image(
+const char* PyArray_to_image(
 	PyObject*	array_obj,
 	int* 		width,
 	int*		height)
@@ -73,7 +73,7 @@ char* PyArray_to_image(
 
 	*height = (int)PyArray_DIM(img_array, 0);
 	*width = (int)PyArray_DIM(img_array, 1);
-	char* img_data = PyArray_BYTES(img_array);
+	const char* img_data = PyArray_BYTES(img_array);
 
 	Py_DECREF(img_array);
 
@@ -149,7 +149,7 @@ static PyObject* Py_open_image(
 		return NULL;
 
 	int width, height;
-	char* img_data = PyArray_to_image(img_obj, &width, &height);
+	const char* img_data = PyArray_to_image(img_obj, &width, &height);
 	if (img_data == NULL)
 	{
 		PyErr_SetString(PyExc_TypeError, imarray_error);
@@ -238,33 +238,20 @@ static PyObject* Py_search_single(
 		return NULL;
 
 	int width, height;
-	char* img_data = PyArray_to_image(img_obj, &width, &height);
+	const char* img_data = PyArray_to_image(img_obj, &width, &height);
 	if (img_data == NULL)
 	{
 		PyErr_SetString(PyExc_TypeError, imarray_error);
 		return NULL;
 	}
 
-	if (!stasm_init(datadir, 0 /*trace*/))
-	{
-		PyErr_SetString(StasmException, stasm_lasterr());
-		return NULL;
-	}
-
-	if (!stasm_open_image(img_data, width, height, debugpath,
-		0 /*multiface*/, 10 /*minwidth*/))
-	{
-		PyErr_SetString(StasmException, stasm_lasterr());
-		return NULL;
-	}
-
 	int foundface;
 	float* landmarks = new float[stasm_NLANDMARKS * 2];
 
-	if (!stasm_search_auto_ext(&foundface, landmarks, NULL))
+	if (!stasm_search_single(&foundface, landmarks, img_data, width,
+				 height, debugpath, datadir))
 	{
 		PyErr_SetString(StasmException, stasm_lasterr());
-		delete[] landmarks;
 		return NULL;
 	}
 
@@ -300,7 +287,7 @@ static PyObject* Py_search_pinned(
 		return NULL;
 
 	int width, height;
-	char* img_data = PyArray_to_image(img_obj, &width, &height);
+	const char* img_data = PyArray_to_image(img_obj, &width, &height);
 	if (img_data == NULL)
 	{
 		PyErr_SetString(PyExc_TypeError, imarray_error);
