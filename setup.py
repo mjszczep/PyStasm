@@ -8,8 +8,8 @@ For more information, visit http://www.milbo.users.sonic.net/stasm/
 DOCLINES = __doc__.split('\n')
 
 import sys
-import os.path
-import glob
+import os
+import fnmatch
 
 if sys.version_info[0] >= 3:
     import builtins
@@ -24,6 +24,13 @@ except ImportError:
     from distutils.core import setup, Extension
     from distutils.command.build_ext import build_ext
     using_setuptools = False
+
+def recursive_glob(path, match):
+    matches = []
+    for root, dirnames, filenames in os.walk(path):
+        for filename in fnmatch.filter(filenames, match):
+            matches.append(os.path.join(root, filename))
+    return matches
 
 cflags = {'msvc' : ['/EHsc']}
 
@@ -48,14 +55,13 @@ class stasm_build_ext(build_ext):
 
 metadata = dict(
         name='PyStasm',
-        version='0.1',
+        version='0.2',
         author='Matthew Szczepankiewicz',
         author_email='mjszczep@buffalo.edu',
 	ext_modules=[
             Extension('stasm._stasm',
-                      sources=
-                          glob.glob(os.path.join('src', '*.cpp')) +
-                          glob.glob(os.path.join('src', 'MOD_1', '*.cpp')),
+                      sources = recursive_glob('src', '*.cpp'),
+                      depends = recursive_glob('src', '*.h'),
                       #include_dirs = ['include'],
 		      #On Windows, these should be of the form eg opencv_core300. I think.
                       libraries = ['opencv_core',
@@ -66,6 +72,7 @@ metadata = dict(
                       language = 'C++',
                       )
             ],
+        headers = recursive_glob('src', '*.h') + recursive_glob('src', '*.mh'),
         cmdclass = {'build_ext': stasm_build_ext},
         packages = ['stasm'],
         package_data = {'stasm' : ['LICENSE.txt', os.path.join('data','*.*')]},

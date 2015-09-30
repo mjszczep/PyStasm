@@ -1,2 +1,5 @@
 include LICENSE.txt
-include stasm/data/*.*
+graft stasm/data
+recursive-include src *.h
+recursive-include src *.mh
+prune doc/_build
