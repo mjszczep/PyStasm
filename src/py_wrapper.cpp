@@ -18,7 +18,7 @@
   #define PyStr_AS_STRING(ob) PyString_AsString(ob)
 #endif
 
-static const char StasmException_doc[] = "Stasm library error.";
+static const char StasmException_doc[]	= "Stasm library error.";
 static PyObject *StasmException, *datadir_default;
 
 static const char trace_error[]		= "trace must be set to True or False.";
@@ -436,9 +436,9 @@ static PyObject* Py_convert_shape(
 }
 
 static const char module_doc[] = 
-"Python wrapper around the Stasm library.\n"
+"Python wrapper for finding features in faces.\n"
 "\n"
-"Stasm is a software library for finding features in faces.\n"
+"Stasm is a C++ software library for finding features in faces.\n"
 "For more information, visit http://www.milbo.users.sonic.net/stasm/\n";
 
 static PyMethodDef module_methods[] = {

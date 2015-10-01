@@ -1,5 +1,5 @@
 # PyStasm
-Python wrapper around the Stasm library.
+Python wrapper for finding features in faces.
 ## Description
 [Stasm](http://www.milbo.users.sonic.net/stasm/) is a C++ software library for finding features in faces. PyStasm is a library wrapper with simplified Pythonic syntax using the Python C API built on top of [OpenCV](http://opencv.org/) and [NumPy](http://www.numpy.org/). For example, to get a list of facial landmarks from an image:
 ```python
