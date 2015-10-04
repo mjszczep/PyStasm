@@ -39,6 +39,12 @@ A minimal example with PyStasm looks like this:
     cv2.imshow("stasm minimal", img)
     cv2.waitKey(0)
 
+This produces the following image, showing the highlighted facial landmarks:
+
+.. image:: example.jpg
+   :align: center
+   :alt: Stasm demonstration
+
 Functions
 ---------
 .. autofunction:: stasm.init
