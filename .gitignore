@@ -30,3 +30,6 @@ pip-delete-this-directory.txt
 
 # Sphinx documentation
 doc/_build/
+
+# Don't include custom .pypirc with my password and stuff
+.pypirc
