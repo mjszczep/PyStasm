@@ -2,4 +2,3 @@ include LICENSE.txt
 graft stasm/data
 recursive-include src *.h
 recursive-include src *.mh
-prune doc/_build
