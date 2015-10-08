@@ -32,18 +32,25 @@ def recursive_glob(path, match):
             matches.append(os.path.join(root, filename))
     return matches
 
-cflags = {'msvc' : ['/EHsc']}
+cv_libs = ['opencv_core',
+           'opencv_imgproc',
+           'opencv_objdetect']
+if sys.platform == 'win32':
+    cv_libs = [lib + '300' for lib in cv_libs]
+
+cflags = {'msvc': ['/EHsc']}
 
 class stasm_build_ext(build_ext):
-
     def build_extensions(self):
         c = self.compiler.compiler_type
-        so = self.compiler.compiler_so
+        if c == 'unix':
+            # Remove -Wstrict-prototypes since we're compiling C++
+            so = self.compiler.compiler_so
+            if '-Wstrict-prototypes' in so:
+                so.remove('-Wstrict-prototypes')
         if c in cflags:
-            so.extend(cflags[c])
-        # Remove -Wstrict-prototypes since we're compiling C++
-        if '-Wstrict-prototypes' in so:
-            so.remove('-Wstrict-prototypes')
+            for e in self.extensions:
+                e.extra_compile_args = cflags[c]
         build_ext.build_extensions(self)
 
     def finalize_options(self):
@@ -55,38 +62,32 @@ class stasm_build_ext(build_ext):
 
 metadata = dict(
         name='PyStasm',
-        version='0.2.1',
+        version='0.3.0',
         author='Matthew Szczepankiewicz',
         author_email='mjszczep@buffalo.edu',
 	ext_modules=[
             Extension('stasm._stasm',
                       sources = recursive_glob('src', '*.cpp'),
                       depends = recursive_glob('src', '*.h'),
-                      #include_dirs = ['include'],
-		      #On Windows, these should be of the form eg opencv_core300. I think.
-                      libraries = ['opencv_core',
-                                   'opencv_imgproc',
-                                   'opencv_objdetect',
-                                   ],
-                      #library_dirs = ['lib'],
+                      libraries = cv_libs,
                       language = 'C++',
                       )
             ],
-        headers = recursive_glob('src', '*.h') + recursive_glob('src', '*.mh'),
-        cmdclass = {'build_ext': stasm_build_ext},
-        packages = ['stasm'],
-        package_data = {'stasm' : ['LICENSE.txt', os.path.join('data','*.*')]},
+        headers=recursive_glob('src', '*.h') + recursive_glob('src', '*.mh'),
+        cmdclass={'build_ext': stasm_build_ext},
+        packages=['stasm'],
+        package_data={'stasm' : ['LICENSE.txt', os.path.join('data','*.*')]},
         include_package_data=True,
         url='http://github.com/mjszczep/PyStasm',
         license='Simplified BSD',
         description=DOCLINES[0],
         long_description='\n'.join(DOCLINES[2:]),
-        platforms=['Linux'], #Windows support coming soon
+        platforms=['Linux', 'Windows'],
         classifiers=[
             'Programming Language :: C++',
             'Programming Language :: Python :: 2',
             'Programming Language :: Python :: 3',
-            #'Operating System :: Microsoft :: Windows', #Coming soon
+            'Operating System :: Microsoft :: Windows',
             'Operating System :: Unix',
             'Topic :: Software Development :: Libraries',
             'Topic :: Scientific/Engineering :: Image Recognition',
