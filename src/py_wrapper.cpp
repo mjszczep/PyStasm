@@ -252,6 +252,7 @@ static PyObject* Py_search_single(
 				 height, debugpath, datadir))
 	{
 		PyErr_SetString(StasmException, stasm_lasterr());
+		delete[] landmarks;
 		return NULL;
 	}
 
