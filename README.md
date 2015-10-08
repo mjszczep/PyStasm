@@ -26,6 +26,7 @@ $ python setup.py install
 For information specific to this wrapper, take a look at the PyStasm [API reference](http://pythonhosted.org/PyStasm). For further information about Stasm consult the [user manual](http://www.milbo.org/stasm-files/stasm4.pdf). To build the PyStasm docs:
 ```
 $ pip install Sphinx
+$ python setup.py build_ext --inplace
 $ cd doc
 $ make html
 ```
