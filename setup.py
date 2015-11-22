@@ -36,7 +36,9 @@ cv_libs = ['opencv_core',
            'opencv_imgproc',
            'opencv_objdetect']
 if sys.platform == 'win32':
-    cv_libs = [lib + '300' for lib in cv_libs]
+    from cv2 import __version__ as cv_ver
+    cv_ver = ''.join(c for c in cv_ver if c.isdigit())
+    cv_libs = [lib + cv_ver for lib in cv_libs]
 
 cflags = {'msvc': ['/EHsc']}
 
