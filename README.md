@@ -11,7 +11,7 @@ A full Python version of the minimal Stasm C++ [example](http://www.milbo.users.
 ## Requirements
 * Python (tested on 2.7, 3.5)
 * numpy >= 1.7
-* [OpenCV](http://opencv.org/) (3.0 or newer required for Python 3)
+* [OpenCV](http://opencv.org/) 3.0
 
 ## Installation
 The recommended way to install PyStasm is through [PyPI](https://pypi.python.org/pypi/PyStasm):
