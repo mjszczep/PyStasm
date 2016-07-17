@@ -17,6 +17,9 @@
     #else
       using namespace std::tr1;
     #endif
+  #elif __llvm__ // Apple
+    #include <unordered_map>
+    using namespace std;
   #else          // assume gcc
     #include <tr1/unordered_map>
     using namespace std::tr1;
